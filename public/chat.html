@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chat-Z</title>
+<style>
+body{margin:0;font-family:Arial;height:100vh;display:flex;background:#0f0f1a;color:white;overflow:hidden;}
+.sidebar{width:290px;background:#1e1e2f;border-right:1px solid #444;overflow-y:auto;position:fixed;left:-290px;top:0;height:100%;transition:0.3s;z-index:100;}
+.contact{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid #333;cursor:pointer;}
+.contact img{width:45px;height:45px;border-radius:50%;object-fit:cover;}
+.contact:hover{background:#2b2b40;}
+.chat-area{flex:1;display:flex;flex-direction:column;width:100%;}
+.chat-header{background:#6b3fa1;padding:15px;margin-left:-60px;font-size:18px;display:flex;align-items:center;gap:30px;}
+.menu-btn{font-size:24px;cursor:pointer;}
+.messages{flex:1;padding:60px;overflow-y:auto;height:auto;}
+  .message{
+padding:6px 10px;
+margin:6px 0;
+border-radius:12px;
+max-width:38%;
+font-size:13px;
+}
+.sent{background:#6b3fa1;margin-left:auto;}
+.received{background:#333;}
+.chat-input{display:flex;padding:10px;background:#111;}
+.chat-input input{flex:1;padding:10px;border:none;border-radius:5px;}
+ .chat-input button{
+margin-left:10px;
+padding:14px 28px;
+background:#6b3fa1;
+border:none;
+color:white;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+font-weight:bold;
+}
+.emoji-box{position:absolute;bottom:70px;left:20px;background:#222;padding:10px;border-radius:10px;display:none;box-shadow:0 5px 15px rgba(0,0,0,0.5);}
+.emoji-box span{font-size:22px;cursor:pointer;margin:5px;}
+.emoji-box span:hover{transform:scale(1.3);}
+</style>
+</head>
+<div id="typingStatus" style="font-size:12px;color:#aaa;margin-left:60px;"></div>
+<body>
+<div class="sidebar">
+<div class="contact" onclick="openChat('John','john.jpg')">
+<img src="john.jpg"><span>John</span>
+</div>
+<div class="contact" onclick="openChat('Alex','alex.jpg')">
+<img src="alex.jpg"><span>Alex</span>
+</div>
+<div class="contact" onclick="openChat('Sara','sara.jpg')">
+<img src="sara.jpg"><span>Sara</span>
+</div>
+</div>
+<div class="chat-area">
+<div class="chat-header">
+<span class="menu-btn" onclick="toggleMenu()">☰</span>
+<img id="chatPhoto" src="" style="width:35px;height:35px;border-radius:50%;">
+<span id="chatName">Select a chat</span>
+</div>
+<div class="messages" id="messages"></div>
+<div class="chat-input">
+<button onclick="toggleEmoji()">😀</button>
+<input id="messageInput" placeholder="Type a message" oninput="typing()">
+<button onclick="sendMessage()">Send</button>
+</div>
+<div id="emojiBox" class="emoji-box">
+<span onclick="selectEmoji('😀')">😀</span>
+<span onclick="selectEmoji('😁')">😁</span>
+<span onclick="selectEmoji('😂')">😂</span>
+<span onclick="selectEmoji('😎')">😎</span>
+<span onclick="selectEmoji('😍')">😍</span>
+<span onclick="selectEmoji('😢')">😢</span>
+<span onclick="selectEmoji('👍')">👍</span>
+<span onclick="selectEmoji('❤️')">❤️</span>
+</div>
+</div>
+<script>
+let currentUser="";
+const messageSound=new Audio("https://www.soundjay.com/buttons/sounds/button-3.mp3");
+function openChat(name,photo){
+currentUser=name;
+document.getElementById("chatName").innerText=name;
+document.getElementById("chatPhoto").src=photo;
+document.getElementById("typingStatus").innerText="Online 🟢";
+loadMessages();
+scrollBottom();
+document.querySelector(".sidebar").style.left="-290px";
+document.getElementById("messageInput").focus();
+}
+function sendMessage(){
+if(!currentUser){alert("Select a contact first!");return;}
+let input=document.getElementById("messageInput");
+let text=input.value;
+if(text==="")return;
+let time=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+let messageData={type:"text",text:text,time:time,status:"✔"};
+saveMessage(messageData);
+displayMessage(messageData);
+input.value="";
+scrollBottom();
+messageSound.play();
+setTimeout(updateTick,1000);
+}
+function saveMessage(data){
+let chat=JSON.parse(localStorage.getItem(currentUser))||[];
+chat.push(data);
+localStorage.setItem(currentUser,JSON.stringify(chat));
+}
+function displayMessage(data){
+let msg=document.createElement("div");
+msg.className="message sent";
+msg.innerHTML=`${data.text}<br><small>${data.time} <span class="tick">${data.status}</span></small>`;
+document.getElementById("messages").appendChild(msg);
+}
+function loadMessages(){
+document.getElementById("messages").innerHTML="";
+let chat=JSON.parse(localStorage.getItem(currentUser))||[];
+chat.forEach(displayMessage);
+scrollBottom();
+}
+function updateTick(){
+document.querySelectorAll(".tick").forEach(t=>{t.innerText="✔✔";});
+}
+function toggleEmoji(){
+if(!currentUser){alert("Select a contact first!");return;}
+let box=document.getElementById("emojiBox");
+box.style.display=box.style.display==="block"?"none":"block";
+}
+function selectEmoji(emoji){
+if(!currentUser){alert("Select a contact first!");return;}
+let input=document.getElementById("messageInput");
+input.value=emoji;
+document.getElementById("emojiBox").style.display="none";
+}
+function typing(){
+document.getElementById("typingStatus").innerText="Typing...";
+clearTimeout(window.typingTimer);
+window.typingTimer=setTimeout(()=>{document.getElementById("typingStatus").innerText="Online 🟢";},1000);
+}
+function scrollBottom(){
+let msgBox=document.getElementById("messages");
+msgBox.scrollTop=msgBox.scrollHeight;
+}
+function toggleMenu(){
+let sidebar=document.querySelector(".sidebar");
+if(sidebar.style.left==="0px"){sidebar.style.left="-290px";}
+else{sidebar.style.left="0px";}
+}
+document.addEventListener("click",function(event){
+let sidebar=document.querySelector(".sidebar");
+let menuBtn=document.querySelector(".menu-btn");
+if(sidebar.style.left==="0px"){
+if(!sidebar.contains(event.target)&&!menuBtn.contains(event.target)){
+sidebar.style.left="-290px";
+}
+}
+});
+</script>
+</body>
+</html>
