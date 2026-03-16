@@ -18,6 +18,9 @@ mongoose.connect("mongodb+srv://NISHCHALHS:Nishchalhs9844@cluster0.rv4syvw.mongo
 
 const PORT = process.env.PORT || 3000;
 
+app.get("/", (req, res) => {
+res.sendFile(__dirname + "/public/Welcome.html");
+});
 app.listen(PORT, () => {
 console.log(`Server running on port ${PORT}`);
 });
