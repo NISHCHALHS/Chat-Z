@@ -203,30 +203,33 @@ input:focus{
 </body>
 
 <script>
+  
+ async function login(){
 
-function login(){
-
-const username = document.getElementById("username").value;
+const email = document.getElementById("username").value;
 const password = document.getElementById("password").value;
 
-const correctUser = "admin";
-const correctPass = "1234";
+const res = await fetch("/auth/login",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+email,
+password
+})
+});
 
-if(username === "" || password === ""){
-alert("Please enter username and password");
-return;
-}
+const data = await res.json();
 
-if(username === correctUser && password === correctPass){
-alert("Login Successful!");
+if(data.message === "Login successful"){
+alert("Login successful");
 window.location.href="chat.html";
-}
-else{
-alert("Incorrect username or password");
-}
-
+}else{
+alert(data.message);
 }
 
+}
 </script>
 
 <script>
