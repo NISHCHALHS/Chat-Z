@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Chats-Z</title>
+
+<style>
+ 
+
+ body{
+    
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    padding:0;                
+    background: linear-gradient(
+        145deg,
+        rgba(3, 6, 54, 0.967),
+        rgba(39, 3, 55, 0.864)
+    );}
+
+    fieldset{
+    position: relative;   
+    height: 650px;
+    width: 650px;  
+    max-width:90vw;
+    max-height:90vh;        
+    border: none;         
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+
+    box-shadow:
+        0 25px 80px rgba(75, 51, 183, 0.734),
+        inset 0 0 40px rgb(104, 55, 159);
+
+    border-radius: 70% 30% 60% 40% / 40% 60% 30% 70%;
+
+    animation: morph 7s ease-in-out infinite,
+               floatCard 6s ease-in-out infinite;
+}
+ 
+fieldset::before{
+    content: "";
+    position: absolute;
+    inset: -3px;
+    background: linear-gradient(45deg, #380c4e, #2c304fa5, #2e096ed5, #380e68);
+    background-size: 400% 400%;
+    border-radius: inherit;
+    z-index: -1;
+    animation: borderGlow 8s linear infinite;
+
+    pointer-events: none;    
+}
+ fieldset::after{
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        120deg,
+        transparent 40%,
+        rgba(128, 7, 165, 0.389) 50%,
+        transparent 60%
+    );
+    transform: rotate(25deg);
+    animation: shineMove 6s linear infinite;
+
+    pointer-events: none;   
+}
+@keyframes morph {
+    0% {
+        border-radius: 70% 30% 60% 40% / 40% 60% 30% 70%;
+    }
+    50% {
+        border-radius: 40% 60% 30% 70% / 70% 30% 60% 40%;
+    }
+    100% {
+        border-radius: 70% 30% 60% 40% / 40% 60% 30% 70%;
+    }
+}
+
+ @keyframes floatCard {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes borderGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes shineMove {
+    0% { transform: translateX(-100%) rotate(25deg); }
+    100% { transform: translateX(100%) rotate(25deg); }
+}
+fieldset:hover{
+    box-shadow:
+        0 30px 70px rgba(0, 0, 0, 0.759),
+        0 0 60px rgba(127,0,255,0.25);
+}
+#hello{
+    display:flex;
+    flex-direction:column;   /* puts text in next line */
+    margin-top:10px;
+    margin-left: 80px;
+    align-items: flex-start;
+
+}
+
+.line1{
+    font-size:39px;
+    margin-top: 160px;
+    margin-left: 40px;
+    color:#A0A3BD;
+    text-align: center;
+}
+
+.brand{
+
+    font-size: 32px;
+    font-weight: 800;
+
+    background: linear-gradient(45deg, #5865F2,#7F00FF);
+    background-size: 300% 300%;
+    
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    animation: textGlow 5s ease infinite;
+
+    letter-spacing: 1px;
+}
+.line2{
+    font-size:28px;
+    margin-top:40px;
+    margin-left: 90px;
+     
+    color: #FFFFFF;
+}
+             
+.button-container{
+    margin-top:80px;
+    display:flex;
+    justify-content:center;
+    gap:90px;   
+}
+
+ .btn{
+    padding:17px 29px;
+    font-size:20px;
+    border:none;
+    border-radius:25px;
+    cursor:pointer; 
+    transition:0.3s ease;
+    font-weight:600;
+    margin-top: 20px;
+     background: linear-gradient(135deg, #131b40, #0b103c);
+    box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.742),
+        inset 0 1px 2px rgba(13, 0, 70, 0.944);
+
+    transition: all 0.3s ease;
+}
+
+.signup{
+   background: linear-gradient(45deg,#040a3bc1,#a04dc6d3);
+    color:white;
+    box-shadow:0 8px 25px rgba(127,0,255,0.4);
+    
+}
+
+.login{
+ background: linear-gradient(45deg,#040a3bc1,#a04dc6d3);
+    color:white;
+    box-shadow:0 8px 25px rgba(127,0,255,0.4);
+    
+}
+  
+
+.btn:hover{
+    opacity:0.8;
+    transform:scale(1.05);
+     transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(127,0,255,0.5);
+   
+} 
+ .tooltip{
+    position: relative;
+    display: inline-block;
+}
+
+ .tooltip-text{
+    visibility: hidden;
+    opacity: 0;
+    width: 250px;
+    height: 20px;
+     
+    
+     background: linear-gradient(135deg,#39427cc8);
+
+    color:#ffffff;
+    text-align: center;
+    padding: 10px 12px;
+    border-radius: 15px;
+    font-size: 18px;
+    font-weight: 500;
+
+    box-shadow: 
+        0 8px 20px rgba(14, 0, 0, 0.737),
+        inset 0 1px 3px rgb(20, 0, 0);
+
+    position: absolute;
+    top: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    transition: all 0.3s ease;
+}
+
+ 
+.tooltip:hover .tooltip-text{
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(5px); /* 👈 small gap effect */
+}
+.container{
+    margin: 20px;
+    
+  }
+</style>
+</head>
+ <script>
+document.addEventListener("mousemove", function(e){
+
+    let x = e.clientX;
+    let y = e.clientY;
+
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+
+    let percentX = x / width * 100;
+    let percentY = y / height * 100;
+
+    // Glow size changes based on cursor distance from center
+    let centerDistance = Math.sqrt(
+        Math.pow(x - width/2, 2) + 
+        Math.pow(y - height/2, 2)
+    );
+
+    let maxDistance = Math.sqrt(
+        Math.pow(width/2, 2) + 
+        Math.pow(height/2, 2)
+    );
+
+    let glowSize = 30 + (centerDistance / maxDistance) * 40;
+
+    // Color shifts based on X position
+    let hue = percentX * 3;
+
+    document.body.style.background =
+        `linear-gradient( ${glowSize}% at ${percentX}% ${percentY}%, 
+        hsl(${hue}, 70%, 60%), 
+        #141420 70%)`;
+
+});
+</script>
+
+<body>
+
+<fieldset>
+<div class="container">
+<div id="hello">
+    <b class="line1">Hello User 👋</b>
+    <b class="line2">Welcome to <span class="brand">Chat-Z</span></b>
+</div>
+
+<div class="button-container">
+
+    <div class="tooltip">
+        <button class="btn signup" onclick="goToSignup()">Sign Up</button>
+        <span class="tooltip-text">Create a new secure account?</span>
+    </div>
+
+    <div class="tooltip">
+        <button class="btn login" onclick="goToLogin()">Login</button>
+        <span class="tooltip-text">Already have an account?</span>
+    </div>
+
+</div>
+
+</fieldset>
+
+<script>
+function goToSignup(){
+    window.location.href = "Signup.html";
+     
+}
+
+function goToLogin(){
+    window.location.href = "login.html";
+}
+</script>
+ 
+
+</body>
+</html>

@@ -12,15 +12,12 @@ app.use(express.static("public"));
 
 app.use("/auth", authRoutes);
 
-mongoose.connect("mongodb+srv://NISHCHALHS:Nishchalhs9844@cluster0.rv4syvw.mongodb.net/chatz?retryWrites=true&w=majority")
-.then(() => console.log("MongoDB connected"))
-.catch(err => console.log(err));
+mongoose.connect("mongodb+srv://NISHCHALHS:Nishchalhs9844@cluster.mongodb.net/chatz")
+.then(()=>console.log("MongoDB connected"))
+.catch(err=>console.log(err));
 
 const PORT = process.env.PORT || 3000;
 
-app.get("/", (req, res) => {
-res.sendFile(__dirname + "/public/Welcome.html");
-});
-app.listen(PORT, () => {
+app.listen(PORT,()=>{
 console.log(`Server running on port ${PORT}`);
 });
