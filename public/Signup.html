@@ -1,0 +1,517 @@
+  <!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChatZ - Sign Up</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:'Segoe UI',sans-serif;
+    background:
+        radial-gradient(circle at 30% 30%, #0b123eb2, transparent 65%),
+        linear-gradient(135deg,#0e1f2d,#6b3fa1);
+    overflow: hidden;
+}
+
+/* Profile Upload */
+.profile-upload{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+}
+
+.profile-upload img{
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid #764ba2;
+}
+
+.profile-upload input{
+    display:none;
+}
+
+.upload-btn{
+    padding:6px 15px;
+    border-radius:20px;
+    background:#764ba2;
+    color:white;
+    cursor:pointer;
+    font-size:13px;
+}
+
+/* Inputs */
+input{
+    padding:12px;
+    border-radius:15px;
+    border:2px solid #060606;
+    font-size:14px;
+    outline:none;
+    transition:0.3s;
+}
+
+input:focus{
+    border-color:#764ba2;
+    box-shadow:0 0 10px rgba(118,75,162,0.4);
+}
+
+/* Password */
+ 
+.toggle{
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+}
+
+.strength-bar{
+    height:6px;
+    border-radius:5px;
+    width:0%;
+    transition:0.3s;
+}
+
+.strength-text{
+    font-size:12px;
+    font-weight:bold;
+}
+
+/* Button */
+button{
+    padding:14px;
+    border:none;
+    border-radius:25px;
+    font-weight:bold;
+    font-size: 17px;
+    cursor:pointer;
+    background:linear-gradient(45deg,#2b2f77,#50176b);
+    color:white;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+.message{
+    text-align:center;
+    font-weight:bold;
+}
+.success{ color:green; }
+.error{ color:red; }
+
+ .signup-box{
+    border:2px solid rgba(118,75,162,0.4);
+    border-radius:20px;
+    padding:30px;
+    display:flex;
+    flex-direction:column;
+    margin:60px;
+    width:400px;
+    height:490px;
+    background:linear-gradient(145deg,#ffffff,#efe6ff);
+}
+ 
+
+.step{
+    display:none;
+    flex-direction:column;
+    gap:25px;
+    justify-content:center;
+}
+
+.step.active{
+    display:flex;
+    gap: 27px;
+    margin-top: 20px;
+    
+}
+
+.btn-group{
+    display:flex;
+    justify-content:space-between;
+    
+     }
+ #create{
+    font-size:30px;
+    font-weight:bold;
+    text-align:center;
+    margin-bottom:20px;
+}
+ 
+ #step2 input[type="email"]{
+    margin-top:-40px;
+}
+.otp-row{
+display:flex;
+gap:10px;
+}
+
+.otp-row input{
+flex:1;
+}
+
+#sendBtn{
+width:120px;
+}
+ .password-wrapper{
+    position:relative;
+    width:100%;
+}
+
+.password-wrapper input{
+    width:100%;
+    padding:12px;
+    border-radius:15px;
+    border:2px solid #060606;
+    font-size:14px;
+    outline:none;
+    box-sizing:border-box;
+}
+
+ 
+
+
+</style>
+
+ 
+</head>
+
+<body>
+  <form onsubmit="event.preventDefault(); signup();"> 
+<fieldset class="signup-box">
+ <p id="create">Create Account</p>
+
+<!-- STEP 1 -->
+<div class="step active" id="step1">
+    <input type="text" id="username" placeholder="Username">
+    <input type="text" placeholder="Enter your Last Name" required>
+
+    <input type="text" placeholder="Date of Birth" 
+       onfocus="this.type='date'" 
+       onblur="if(!this.value)this.type='text'">
+       
+    <input type="email" id="email" placeholder="Email (Optional)">
+    <button type="button" onclick="nextStep(1)">Next</button>
+</div>
+
+<!-- STEP 2 -->
+ <div class="step" id="step2">
+
+<div class="otp-row">
+<input type="tel" id="mobile" placeholder="Mobile Number"
+
+pattern="[0-9]{10}" maxlength="10" required>
+
+<button type="button" id="sendBtn" onclick="sendOTP()">Send OTP</button>
+</div>
+
+ <p id="otpTimer" style="font-size:17px;color:#764ba2;font-weight:bold;text-align: right;"></p>
+
+<input type="text" id="otpInput" placeholder="Enter OTP" disabled required>
+
+ 
+
+<div class="btn-group">
+<button type="button" oncli ick="prevStep(2)">Back</button>
+<button type="button" onclick="verifyOTP()">Next</button>
+</div>
+
+</div>
+
+<!-- STEP 3 -->
+<div class="step" id="step3">
+
+    <div class="password-wrapper">
+        <input type="password" id="password" placeholder="Password" oninput="checkStrength()" required>
+        <span class="toggle" onclick="togglePassword('password')"></span>
+    </div>
+
+    <div class="strength-bar" id="strengthBar"></div>
+    <div class="strength-text" id="strengthText"></div>
+
+    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+
+    <div class="btn-group">
+        <button type="button" onclick="prevStep(3)">Back</button>
+        <button type="button" onclick="nextStep(3)">Next</button>
+    </div>
+
+</div>
+
+<!-- STEP 4 -->
+<div class="step" id="step4">
+
+    <div class="profile-upload">
+        <img id="preview" src="https://via.placeholder.com/100">
+        <label class="upload-btn">
+            Upload Photo
+            <input type="file" accept="image/*" onchange="previewImage(event)">
+        </label>
+    </div>
+
+    <div class="btn-group">
+        <button type="button" onclick="prevStep(4)">Back</button>
+        <button type="submit">Create Account</button>
+    </div>
+</div>
+
+<p id="message" class="message"></p>
+
+</fieldset>
+</form>
+ 
+ 
+ 
+<!-- Crop Modal -->
+<div id="cropModal" style="
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.7);
+justify-content:center;
+align-items:center;
+z-index:1000;
+">
+
+<div style="
+background:white;
+padding:20px;
+border-radius:15px;
+width:350px;
+text-align:center;
+">
+
+<h3>Crop Your Photo</h3>
+
+<img id="cropImage" style="max-width:100%;">
+
+<br><br>
+<button onclick="cropImage()">Crop & Save</button>
+
+</div>
+</div>
+
+ 
+<script>
+let cropper;
+let generatedOTP;
+let timerInterval;
+let otpVerified = false;
+
+
+/* Step Navigation */
+function nextStep(step){
+    document.getElementById("step"+step).classList.remove("active");
+    document.getElementById("step"+(step+1)).classList.add("active");
+}
+
+function prevStep(step){
+    document.getElementById("step"+step).classList.remove("active");
+    document.getElementById("step"+(step-1)).classList.add("active");
+}
+
+/* OTP SEND */
+function sendOTP(){
+    const mobile = document.getElementById("mobile").value;
+    const otpInput = document.getElementById("otpInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    if(mobile.length !== 10){
+        alert("Enter valid 10 digit mobile number");
+        return;
+    }
+
+    generatedOTP = Math.floor(1000 + Math.random() * 9000);
+    alert("Demo OTP: " + generatedOTP);
+
+    otpInput.disabled = false;
+    sendBtn.disabled = true;
+
+    startTimer();
+}
+
+/* OTP TIMER */
+ function startTimer(){
+    const timer = document.getElementById("otpTimer");
+    let countdown = 4;
+
+    clearInterval(timerInterval);
+
+    timer.style.cursor = "default";
+
+    timerInterval = setInterval(()=>{
+        timer.innerHTML = "Resend OTP in " + countdown + " sec";
+        countdown--;
+
+        if(countdown < 0){
+            clearInterval(timerInterval);
+
+            timer.innerHTML = "Resend OTP";
+            timer.style.cursor = "pointer";
+            timer.style.textAlign="right";
+            timer.style.marginTop="10px";
+            timer.style.marginBottom="10px";
+            timer.onclick = resendOTP;
+        }
+
+    },1000);
+}
+function resendOTP(){
+    generatedOTP = Math.floor(1000 + Math.random() * 9000);
+
+    alert("New OTP: " + generatedOTP);
+
+    startTimer();
+}
+
+/* OTP VERIFY */
+function verifyOTP(){
+    const otpValue = document.getElementById("otpInput").value;
+
+    if(otpValue == generatedOTP){
+        otpVerified = true;
+        alert("OTP Verified Successfully");
+        nextStep(2);
+    }else{
+        alert("Invalid OTP");
+    }
+}
+
+/* Profile Crop */
+function previewImage(event){
+    const reader = new FileReader();
+    reader.onload = function(){
+        const cropImage = document.getElementById("cropImage");
+        cropImage.src = reader.result;
+        document.getElementById("cropModal").style.display = "flex";
+
+        cropper = new Cropper(cropImage,{
+            aspectRatio:1,
+            viewMode:1
+        });
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+function cropImage(){
+    const canvas = cropper.getCroppedCanvas({
+        width:200,
+        height:200
+    });
+    
+
+    document.getElementById("preview").src = canvas.toDataURL();
+    cropper.destroy();
+    document.getElementById("cropModal").style.display = "none";
+}
+
+/* Password Toggle */
+function togglePassword(id){
+    const input = document.getElementById(id);
+    input.type = input.type === "password" ? "text" : "password";
+}
+
+/* Password Strength */
+function checkStrength(){
+    const pass = document.getElementById("password").value;
+    const bar = document.getElementById("strengthBar");
+    const text = document.getElementById("strengthText");
+
+    let strength = 0;
+
+    if(pass.length >= 8) strength++;
+    if(/[A-Z]/.test(pass)) strength++;
+    if(/[0-9]/.test(pass)) strength++;
+    if(/[@$!%*?&]/.test(pass)) strength++;
+
+    const colors = ["", "red", "orange", "blue", "green"];
+    const labels = ["", "Weak", "Medium", "Strong", "Very Strong"];
+
+    bar.style.width = (strength*25)+"%";
+    bar.style.background = colors[strength];
+    text.innerHTML = labels[strength];
+    text.style.color = colors[strength];
+}
+
+/* Final Submit */
+function signup(e){
+    e.preventDefault();
+
+    const pass = document.getElementById("password").value;
+    const confirm = document.getElementById("confirmPassword").value;
+    const message = document.getElementById("message");
+
+    if(!otpVerified){
+        message.innerHTML="Please verify OTP first!";
+        message.className="message error";
+        return;
+    }
+
+    if(pass !== confirm){
+        message.innerHTML="Passwords do not match!";
+        message.className="message error";
+        return;
+    }
+
+    message.innerHTML="Account Created Successfully!";
+    message.className="message success";
+}
+ 
+</script><script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+
+<script>
+const phoneInput = document.querySelector("#mobile");
+
+const iti = window.intlTelInput(phoneInput, {
+    initialCountry: "in",
+    preferredCountries: ["in","us","gb"],
+    separateDialCode: true,
+    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
+});
+ 
+ 
+
+async function signup(){
+
+const username = document.getElementById("username").value;
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+
+const res = await fetch("/auth/signup",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+username,
+email,
+password
+})
+});
+
+const data = await res.json();
+
+alert(data.message);
+
+if(data.message === "Signup successful"){
+window.location.href="login.html";
+}
+
+}
+
+</script>
+</body>
+</html>
