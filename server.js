@@ -12,10 +12,12 @@ app.use(express.static("public"));
 
 app.use("/auth", authRoutes);
 
-mongoose.connect(" mongodb+srv://NISHCHALHS:<Nishchalhs9844>@cluster0.rv4syvw.mongodb.net/?appName=Cluster0")
+mongoose.connect("mongodb+srv://NISHCHALHS:Nishchalhs9844@cluster0.rv4syvw.mongodb.net/chatz?retryWrites=true&w=majority")
 .then(() => console.log("MongoDB connected"))
 .catch(err => console.log(err));
 
-app.listen(3000, () => {
-console.log("Server running on port 3000");
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+console.log(`Server running on port ${PORT}`);
 });
